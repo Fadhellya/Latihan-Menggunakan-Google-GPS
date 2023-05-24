@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">MapsMuhamadFadhel</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="normal_maps">Normal Maps</string>
+    <string name="satellite_maps">Satellite Maps</string>
+    <string name="hybrid_maps">Hybrid Maps</string>
+    <string name="terrain_maps">Terrain Maps</string>
 </resources>
