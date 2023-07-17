@@ -1,19 +1,21 @@
 package com.fadhel.mapsmuhamadfadhel
 
+import android.content.ContentValues.TAG
+import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.fadhel.mapsmuhamadfadhel.databinding.ActivityMapsBinding
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.*
+import java.util.*
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     val zoom = 13F
@@ -38,6 +40,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         return true
     }
 
+
+
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.normal_maps -> {
             mMap.mapType = GoogleMap.MAP_TYPE_NORMAL
@@ -57,9 +61,42 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         else -> super.onOptionsItemSelected(item)
     }
+    private fun setMapLongClick(map: GoogleMap){
+        map.setOnMapLongClickListener { latlang ->
+            val snippet = String.format(
+                Locale.getDefault(),
+                "Lat: %1.5f, Long: %2$.5f",
+                latlang.latitude,
+                latlang.longitude
+            )
+            map.addMarker(
+                MarkerOptions()
+                    .position(latlang)
+                    .title("Drop Pin")
+                    .snippet(snippet)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.iconmall))
+            )
+        }
+    }
+
+        private fun setMapstyle(googleMap: GoogleMap){
+
+            try {
+                val succes = googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this,R.raw.map_styles))
+                if(!succes){
+                    Log.e(TAG,"Perubahan Style Maps Gagal")
+                }
+            }catch (e:Resources.NotFoundException){
+                Log.e(TAG,"Tidak bisa menemukan Resources Style Maps yang baru")
+            }
+
+        }
+
+
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-
+        setMapstyle(googleMap)
+        setMapLongClick(googleMap)
         val ampera = LatLng(-0.9239349776951578, 100.4427197796989)
         var markerAmpera: Marker?=null
         markerAmpera= mMap.addMarker(
